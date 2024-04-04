@@ -2,7 +2,6 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Container from "@/Components/Container.vue";
 import Pagination from "@/Components/Pagination.vue";
-import PaginationPartDeuce from "@/Components/PaginationPartDeuce.vue";
 
 defineProps(['posts']);
 </script>

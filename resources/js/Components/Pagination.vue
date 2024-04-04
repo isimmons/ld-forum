@@ -36,7 +36,7 @@
                         <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
                     </Link>
                     <Link v-for="link in meta.links"
-                       :href="link.url"
+                       :href="link.url ?? ''"
                        v-html="link.label"
                        class="relative inline-flex items-center first-of-type:rounded-l-md last-of-type:rounded-r-md px-3 py-2"
                        :class="{

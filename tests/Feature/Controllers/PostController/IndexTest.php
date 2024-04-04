@@ -9,9 +9,7 @@ use App\Models\Post;
 it('should return the correct component', function () {
     get(route('posts.index'))
         ->assertOk()
-        ->assertInertia(fn(AssertableInertia $inertia) => $inertia
-            ->component('Posts/Index', true)
-        );
+        ->assertComponent('Posts/Index');
 });
 
 it('should pass posts to the view', function () {

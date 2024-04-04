@@ -3,13 +3,10 @@ import { Link } from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Container from "@/Components/Container.vue";
 import Pagination from "@/Components/Pagination.vue";
-import {formatDistance, parseISO} from "date-fns";
+import { relativeDate } from "@/utils/date.js";
 
 defineProps(['posts'])
 
-const formattedDate = (postDate) => {
-    return formatDistance(parseISO(postDate), new Date(), { addSuffix: true })
-}
 </script>
 
 <template>
@@ -23,7 +20,7 @@ const formattedDate = (postDate) => {
                     <Link :href="route('posts.show', post.id)" class="block group px-2 py-4 rounded-md hover:bg-slate-200">
                         <span class="font-semibold text-lg group-hover:text-indigo-500">{{ post.title }}</span>
                         <span class="block pt-1 text-sm text-slate-600">
-                            Written {{ formattedDate(post.created_at) }} by
+                            Written {{ relativeDate(post.created_at) }} by
                             <span class="font-semibold text-slate-800">
                                 {{ post.user.name }}
                             </span>

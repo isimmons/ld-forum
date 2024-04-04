@@ -29,8 +29,8 @@ class CommentResource extends JsonResource
             'body' => $this->body,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'user' => UserResource::make($this->user),
-            'post' => PostResource::make($this->post),
+            'user' => $this->whenLoaded('user', fn () => UserResource::make($this->user)),
+            'post' => $this->whenLoaded('post', fn () => PostResource::make($this->post)),
         ];
     }
 }

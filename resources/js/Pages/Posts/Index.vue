@@ -29,7 +29,7 @@ defineProps(['posts'])
                 </li>
             </ul>
 
-            <Pagination :meta="posts.meta" />
+            <Pagination :meta="posts.meta" :only="['posts']" />
         </Container>
     </AppLayout>
 </template>

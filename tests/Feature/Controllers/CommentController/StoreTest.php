@@ -1,10 +1,16 @@
 <?php
 
 use function Pest\Laravel\actingAs;
+use function Pest\Laravel\post;
 
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
+
+it('requires authentication', function() {
+    post(route('posts.comments.store', Post::factory()->create()))
+        ->assertRedirect(route('login'));
+});
 
 it('should store a new comment', function () {
    $user = User::factory()->create();

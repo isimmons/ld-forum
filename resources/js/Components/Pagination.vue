@@ -1,12 +1,12 @@
 <template>
     <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
         <div class="flex flex-1 justify-between sm:hidden">
-            <Link :href="previousUrl"
+            <Link :href="previousUrl ?? ''"
                   :only="only"
                   class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                 Previous
             </Link>
-            <Link :href="nextUrl"
+            <Link :href="nextUrl ?? ''"
                   :only="only"
                   class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                 Next
@@ -33,7 +33,7 @@
             <div>
                 <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm bg-white"
                      aria-label="Pagination">
-                    <Link :href="previousUrl"
+                    <Link :href="previousUrl ?? ''"
                           :only="only"
                           class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                         <span class="sr-only">Previous</span>
@@ -50,7 +50,7 @@
                            'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0': !link.active
                        }"
                     ></Link>
-                    <Link :href="nextUrl"
+                    <Link :href="nextUrl ?? ''"
                           :only="only"
                           class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                         <span class="sr-only">Next</span>

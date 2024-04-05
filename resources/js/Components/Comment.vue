@@ -13,12 +13,13 @@ defineProps(['comment']);
             />
         </div>
         <div>
-            <p class="mt-1">{{ comment.body }}</p>
+            <p class="mt-1 break-all">{{ comment.body }}</p>
             <span class="block pt-1 text-xs text-slate-600">
-                Written {{ relativeDate(comment.created_at) }} by
-                <span class="first-letter:uppercase font-semibold text-slate-800">
+                Written by
+                <span class="first-letter:uppercase font-semibold text-slate-600 text-sm">
                     {{ comment.user.name }}
                 </span>
+                {{ relativeDate(comment.created_at) }}
             </span>
         </div>
     </div>

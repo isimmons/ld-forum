@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Tests\TestCase;
 
+
 /*
 |--------------------------------------------------------------------------
 | Test Case

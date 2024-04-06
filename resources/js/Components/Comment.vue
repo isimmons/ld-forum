@@ -17,7 +17,7 @@ const emit = defineEmits(['delete']);
                  class="size-10 rounded-full"
             />
         </div>
-        <div>
+        <div class="flex-1">
             <p class="mt-1 break-all">{{ comment.body }}</p>
             <span class="block pt-1 text-xs text-slate-600">
                 Written by
@@ -27,9 +27,9 @@ const emit = defineEmits(['delete']);
                 {{ relativeDate(comment.created_at) }}
             </span>
             <!-- actions -->
-            <div>
-                <form v-if="comment.can?.delete" class="mt-1" @submit.prevent="$emit('delete', comment.id)">
-                    <DangerButton type="submit">Delete</DangerButton>
+            <div class="mt-2 text-right empty:hidden">
+                <form v-if="comment.can?.delete" @submit.prevent="$emit('delete', comment.id)">
+                    <button type="submit" class="font-mono text-red-700 text-sm hover:font-semibold">Delete</button>
                 </form>
             </div>
         </div>

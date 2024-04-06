@@ -10,7 +10,6 @@ const deleteComment = () => router.delete(route('comments.destroy', props.commen
     preserveScroll: true
 });
 
-const canDelete = computed(() => props.comment.user.id === usePage().props.auth.user?.id);
 </script>
 
 <template>
@@ -31,7 +30,7 @@ const canDelete = computed(() => props.comment.user.id === usePage().props.auth.
                 {{ relativeDate(comment.created_at) }}
             </span>
             <!-- actions -->
-            <div v-if="canDelete" class="mt-1">
+            <div v-if="comment.can?.delete" class="mt-1">
                 <form @submit.prevent="deleteComment">
                     <DangerButton type="submit">Delete</DangerButton>
                 </form>

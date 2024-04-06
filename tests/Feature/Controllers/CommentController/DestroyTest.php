@@ -27,8 +27,20 @@ it('should not delete a comment by another user', function () {
     actingAs($unRelatedUser)->delete(route('comments.destroy', $comment))
         ->assertForbidden();
 
-//    $this->assertDatabaseHas(Comment::class, [ 'id' => $comment->id ]);
-        $this->assertModelExists($comment);
+    $this->assertModelExists($comment);
+});
+
+it('should not delete a comment if it is more than 1 hour old', function () {
+    $this->freezeTime();
+
+    $comment = Comment::factory()->create();
+
+    $this->travel(1)->hour();
+
+    actingAs($comment->user)->delete(route('comments.destroy', $comment))
+        ->assertForbidden();
+
+    $this->assertModelExists($comment);
 });
 
 it('should redirect to the posts show page', function () {

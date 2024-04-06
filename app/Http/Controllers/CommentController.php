@@ -5,27 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Gate;
-use function max;
+use Illuminate\Routing\Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of comments.
-     */
-    public function index()
+
+    use AuthorizesRequests;
+
+    public function __construct()
     {
-        //
+        $this->authorizeResource(Comment::class);
     }
 
-    /**
-     * Show the form for creating a new comment.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created comment in storage.
@@ -44,27 +36,16 @@ class CommentController extends Controller
     }
 
     /**
-     * Display the specified comment.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified comment.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
      * Update the specified comment in storage.
      */
     public function update(Request $request, Comment $comment)
     {
-        //
+
+        $data = $request->validate(['body' => ['required', 'string', 'min:3', 'max:2500']]);
+
+        $comment->update($data);
+
+        return to_route('posts.show', [ 'post' => $comment->post_id, 'page' => $request->query('page') ]);
     }
 
     /**
@@ -72,8 +53,6 @@ class CommentController extends Controller
      */
     public function destroy(Request $request, Comment $comment)
     {
-        Gate::authorize('delete', $comment);
-
         $comment->delete();
 
         return to_route('posts.show', ['post' => $comment->post_id, 'page' => $request->query('page')]);

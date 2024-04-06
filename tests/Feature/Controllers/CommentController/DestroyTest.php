@@ -4,7 +4,6 @@ use function Pest\Laravel\actingAs;
 use function Pest\Laravel\delete;
 
 use App\Models\Comment;
-use App\Models\Post;
 use App\Models\User;
 
 it('requires authentication', function() {
@@ -49,4 +48,12 @@ it('should redirect to the posts show page', function () {
     actingAs($comment->user)
         ->delete(route('comments.destroy', $comment))
         ->assertRedirect(route('posts.show', $comment->post_id));
+});
+
+it('should redirect to the posts show page with the page query parameter', function () {
+    $comment = Comment::factory()->create();
+
+    actingAs($comment->user)
+        ->delete(route('comments.destroy', [ 'comment' => $comment, 'page' => 2 ]))
+        ->assertRedirect(route('posts.show', ['post' => $comment->post_id, 'page' => 2]));
 });

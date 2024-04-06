@@ -1,14 +1,11 @@
 <script setup>
 import { relativeDate } from "@/utils/date.js";
 import DangerButton from "@/Components/DangerButton.vue";
-import {router, usePage} from "@inertiajs/vue3";
-import {computed} from "vue";
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps(['comment']);
 
-const deleteComment = () => router.delete(route('comments.destroy', props.comment.id), {
-    preserveScroll: true
-});
+const emit = defineEmits(['delete']);
 
 </script>
 
@@ -30,8 +27,8 @@ const deleteComment = () => router.delete(route('comments.destroy', props.commen
                 {{ relativeDate(comment.created_at) }}
             </span>
             <!-- actions -->
-            <div v-if="comment.can?.delete" class="mt-1">
-                <form @submit.prevent="deleteComment">
+            <div>
+                <form v-if="comment.can?.delete" class="mt-1" @submit.prevent="$emit('delete', comment.id)">
                     <DangerButton type="submit">Delete</DangerButton>
                 </form>
             </div>

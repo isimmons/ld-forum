@@ -1,11 +1,9 @@
 <script setup>
 import { relativeDate } from "@/utils/date.js";
-import DangerButton from "@/Components/DangerButton.vue";
-import {router} from "@inertiajs/vue3";
 
-const props = defineProps(['comment']);
+const props = defineProps(['comment', 'isEditing']);
 
-const emit = defineEmits(['delete']);
+const emit = defineEmits(['delete', 'edit']);
 
 </script>
 
@@ -27,10 +25,13 @@ const emit = defineEmits(['delete']);
                 {{ relativeDate(comment.created_at) }}
             </span>
             <!-- actions -->
-            <div class="mt-2 text-right empty:hidden">
-                <form v-if="comment.can?.delete" @submit.prevent="$emit('delete', comment.id)">
-                    <button type="submit" class="font-mono text-red-700 text-sm hover:font-semibold">Delete</button>
-                </form>
+            <div class="mt-2 flex justify-end gap-5 empty:hidden">
+<form v-if="comment.can?.update && !isEditing" @submit.prevent="$emit('edit', comment.id)">
+    <button type="submit" class="font-mono text-emerald-600 text-sm hover:font-semibold">Edit</button>
+</form>
+<form v-if="comment.can?.delete && !isEditing" @submit.prevent="$emit('delete', comment.id)">
+    <button type="submit" class="font-mono text-red-700 text-sm hover:font-semibold">Delete</button>
+</form>
             </div>
         </div>
     </div>

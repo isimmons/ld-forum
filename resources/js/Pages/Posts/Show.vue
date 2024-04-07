@@ -11,10 +11,18 @@ import TextArea from "@/Components/TextArea.vue";
 import InputError from "@/Components/InputError.vue";
 import {computed, ref} from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import {useConfirm} from "@/Composables/useConfirm.js";
 
 const props = defineProps(['post', 'comments'])
 
 const commentForm = useForm({body: ''});
+
+const { confirmation } = useConfirm();
+
+const commentTextAreaRef = ref(null);
+const commentIdBeingEdited = ref(null);
+let isEditing = false;
+const commentBeingEdited = computed(() => props.comments.data.find(comment => comment.id === commentIdBeingEdited.value));
 const addComment = () => {
     if (commentForm.processing) return;
 
@@ -28,8 +36,28 @@ const addComment = () => {
 const scrollToComment = (id) => {
     document.getElementById(id).scrollIntoView();
 }
-const updateComment = () => {
+
+const editComment = (commentId) => {
+    isEditing = true;
+    commentIdBeingEdited.value = commentId;
+    commentForm.body = commentBeingEdited.value?.body;
+    commentTextAreaRef.value?.focus();
+}
+
+const cancelEditComment = () => {
+    commentIdBeingEdited.value = null;
+    commentForm.reset();
+    isEditing = false;
+}
+
+const updateComment = async () => {
     if (commentForm.processing) return;
+
+    if(! await confirmation('Are you sure you want to update your comment?')) {
+        console.log('canceling update');
+        commentTextAreaRef.value?.focus();
+        return;
+    }
 
     return commentForm.put(route('comments.update', {
             comment: commentIdBeingEdited.value,
@@ -45,29 +73,17 @@ const updateComment = () => {
         });
 }
 
-const commentTextAreaRef = ref(null);
-const commentIdBeingEdited = ref(null);
-let isEditing = false;
-const commentBeingEdited = computed(() => props.comments.data.find(comment => comment.id === commentIdBeingEdited.value));
-const editComment = (commentId) => {
-    isEditing = true;
-    commentIdBeingEdited.value = commentId;
-    commentForm.body = commentBeingEdited.value?.body;
-    commentTextAreaRef.value?.focus();
-}
+const deleteComment = async (commentId) => {
 
-const cancelEditComment = () => {
-    commentIdBeingEdited.value = null;
-    commentForm.reset();
-    isEditing = false;
-}
+    if(! await confirmation('Are you sure you want to delete this comment?')) return
 
-const deleteComment = (commentId) => router.delete(route('comments.destroy', {
-    comment: commentId,
-    page: props.comments.meta.current_page
-}), {
-    preserveScroll: true
-});
+     router.delete(route('comments.destroy', {
+        comment: commentId,
+        page: props.comments.meta.current_page
+    }), {
+        preserveScroll: true
+    })
+};
 
 
 </script>
@@ -94,10 +110,10 @@ const deleteComment = (commentId) => router.delete(route('comments.destroy', {
                         <InputLabel for="body"
                                     class="sr-only">Comment
                         </InputLabel>
-                        <TextArea id="body"
-                                  ref="commentTextAreaRef"
-                                  v-model="commentForm.body"
-                        />
+                            <TextArea id="body"
+                                      ref="commentTextAreaRef"
+                                      v-model="commentForm.body"
+                            />
                         <InputError :message="commentForm.errors.body" class="mt-1"/>
                     </div>
                     <div class="space-x-3">

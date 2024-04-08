@@ -9,7 +9,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {router, useForm} from "@inertiajs/vue3";
 import TextArea from "@/Components/TextArea.vue";
 import InputError from "@/Components/InputError.vue";
-import {computed, ref} from "vue";
+import {computed, nextTick, onMounted, onUpdated, ref} from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {useConfirm} from "@/Composables/useConfirm.js";
 
@@ -21,8 +21,9 @@ const { confirmation } = useConfirm();
 
 const commentTextAreaRef = ref(null);
 const commentIdBeingEdited = ref(null);
-let isEditing = false;
+const isEditing = ref(false);
 const commentBeingEdited = computed(() => props.comments.data.find(comment => comment.id === commentIdBeingEdited.value));
+
 const addComment = () => {
     if (commentForm.processing) return;
 
@@ -38,7 +39,7 @@ const scrollToComment = (id) => {
 }
 
 const editComment = (commentId) => {
-    isEditing = true;
+    isEditing.value = true;
     commentIdBeingEdited.value = commentId;
     commentForm.body = commentBeingEdited.value?.body;
     commentTextAreaRef.value?.focus();
@@ -47,15 +48,15 @@ const editComment = (commentId) => {
 const cancelEditComment = () => {
     commentIdBeingEdited.value = null;
     commentForm.reset();
-    isEditing = false;
+    isEditing.value = false;
 }
+
 
 const updateComment = async () => {
     if (commentForm.processing) return;
 
-    if(! await confirmation('Are you sure you want to update your comment?')) {
-        console.log('canceling update');
-        commentTextAreaRef.value?.focus();
+    if( ! await confirmation('Are you sure you want to update your comment?') ) {
+        setTimeout(() => commentTextAreaRef.value.focus(), 300);
         return;
     }
 
@@ -118,6 +119,7 @@ const deleteComment = async (commentId) => {
                     </div>
                     <div class="space-x-3">
                         <PrimaryButton type="submit"
+                                       onclick="this.blur()"
                                        class="mt-3 disabled:bg-slate-500"
                                        :aria-disabled="commentForm.processing"
                                        v-text="commentIdBeingEdited ? 'Update Comment' : 'Add Comment'"

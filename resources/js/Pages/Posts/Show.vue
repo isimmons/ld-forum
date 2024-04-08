@@ -9,7 +9,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {router, useForm} from "@inertiajs/vue3";
 import TextArea from "@/Components/TextArea.vue";
 import InputError from "@/Components/InputError.vue";
-import {computed, ref} from "vue";
+import {computed, nextTick, ref} from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {useConfirm} from "@/Composables/useConfirm.js";
 
@@ -20,6 +20,8 @@ const commentForm = useForm({body: ''});
 const { confirmation } = useConfirm();
 
 const commentTextAreaRef = ref(null);
+const commentTextAreaShouldBeFocused = ref(false);
+
 const commentIdBeingEdited = ref(null);
 const isEditing = ref(false);
 const commentBeingEdited = computed(() => props.comments.data.find(comment => comment.id === commentIdBeingEdited.value));
@@ -57,9 +59,9 @@ const updateComment = async () => {
 
     if( ! await confirmation('Are you sure you want to update your comment?') ) {
         setTimeout(() => commentTextAreaRef.value.focus(), 300);
-
         return;
     }
+
 
     return commentForm.put(route('comments.update', {
             comment: commentIdBeingEdited.value,

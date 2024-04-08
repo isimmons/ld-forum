@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="CommentController" type="PestRunConfigurationType">
+  <configuration default="false" name="CommentControllerAll" type="PestRunConfigurationType">
     <CommandLine>
       <PhpTestInterpreterSettings>
         <option name="interpreterName" value="PHP 8.3" />

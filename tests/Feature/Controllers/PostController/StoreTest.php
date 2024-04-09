@@ -9,7 +9,7 @@ use App\Models\Post;
 beforeEach(function () {
     $this->validPost = [
         'title' => 'Hello World',
-        'body' => 'This is my first post.'
+        'body' => str_repeat('a', 100)
     ];
 });
 
@@ -36,13 +36,8 @@ it('should redirect to the post show page', function () {
         ->assertRedirect(route('posts.show', Post::latest('id')->first()));
 });
 
-/**
- * A valid title property for a post is required
- * and must be a string of min 3 and max 120 characters
- */
-it('should require a valid title property', function ($value) {
-    $user = User::factory()->create();
 
-    actingAs($user)->post(route('posts.store'), [...$this->validPost, 'title' => $value])
-        ->assertInvalid('title');
-})->with([ null, 1, 2.5, true, false, str_repeat('a', 9), str_repeat('a', 121)  ]);
+it('should require valid data', function (array $badData, array|string $errors ) {
+    actingAs(User::factory()->create())->post(route('posts.store'), [ ...$this->validPost, ...$badData ] )
+        ->assertInvalid($errors);
+})->with('invalid_post_data');

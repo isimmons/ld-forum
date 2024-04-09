@@ -13,6 +13,7 @@ use App\Models\User;
  * @property mixed $updated_at
  * @property mixed $created_at
  * @property User $user
+ * @method showRoute
  */
 class PostResource extends JsonResource
 {
@@ -29,7 +30,10 @@ class PostResource extends JsonResource
             'body' => $this->body,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'user' => $this->whenLoaded('user', fn () => UserResource::make($this->user))
+            'user' => $this->whenLoaded('user', fn () => UserResource::make($this->user)),
+            'routes' => [
+                'show' => $this->showRoute(),
+            ]
         ];
     }
 }

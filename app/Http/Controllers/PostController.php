@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -55,14 +56,19 @@ class PostController extends Controller
             'user_id' => $request->user()->id
         ]);
 
-        return to_route('posts.show', $post->id);
+        return redirect($post->showRoute());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Request $request, Post $post)
     {
+        if (! Str::contains($post->showRoute(), $request->path())) {
+            return redirect($post->showRoute($request->query()), status: 301);
+        }
+
+
         return inertia('Posts/Show', [
             'post' => fn () => PostResource::make($post->load('user')),
             'comments' => fn () => CommentResource::collection($post->comments()

@@ -33,7 +33,7 @@ it('should redirect to the post show page', function () {
     $user = User::factory()->create();
 
     actingAs($user)->post(route('posts.store'), $this->validPost)
-        ->assertRedirect(route('posts.show', Post::latest('id')->first()));
+        ->assertRedirect(Post::latest('id')->first()->showRoute());
 });
 
 

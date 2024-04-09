@@ -46,7 +46,7 @@ it('should redirect to the posts show page', function () {
 
     actingAs($comment->user)
         ->put(route('comments.update', $comment), [ 'body' => 'updated body' ])
-        ->assertRedirect(route('posts.show', $comment->post));
+        ->assertRedirect($comment->post->showRoute());
 });
 
 it('should redirect to the correct page of comments', function () {
@@ -54,5 +54,5 @@ it('should redirect to the correct page of comments', function () {
 
     actingAs($comment->user)
         ->put(route('comments.update', [ 'comment' => $comment, 'page' => 2 ]), [ 'body' => 'updated body' ])
-        ->assertRedirect(route('posts.show', [ 'post' => $comment->post, 'page' => 2 ]));
+        ->assertRedirect($comment->post->showRoute(['page' => 2]));
 });

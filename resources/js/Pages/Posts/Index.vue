@@ -5,8 +5,20 @@ import Container from "@/Components/Container.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { relativeDate } from "@/utils/date.js";
 
-defineProps(['posts'])
-
+const props = defineProps({
+    posts: {
+        data: [
+            {
+                id: Number,
+                title: String,
+                body: String,
+                created_at: Date,
+                updated_at: Date,
+                routes: [String],
+            }
+        ]
+    }
+});
 </script>
 
 <template>
@@ -17,7 +29,7 @@ defineProps(['posts'])
                     :key="post.id"
                     class="rounded-sm"
                 >
-                    <Link :href="route('posts.show', post.id)" class="block group px-2 py-4 rounded-md hover:bg-slate-200">
+                    <Link :href="post.routes.show" class="block group px-2 py-4 rounded-md hover:bg-slate-200">
                         <span class="font-semibold text-lg group-hover:text-indigo-500">{{ post.title }}</span>
                         <span class="block pt-1 text-sm text-slate-600">
                             Written {{ relativeDate(post.created_at) }} by

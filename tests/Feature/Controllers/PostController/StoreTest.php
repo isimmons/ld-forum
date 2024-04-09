@@ -9,7 +9,7 @@ use App\Models\Post;
 beforeEach(function () {
     $this->validPost = [
         'title' => 'Hello World',
-        'body' => str_repeat('a', 100)
+        'body' => "to be, or not to be, that is the question In faith, I will. let me peruse this face. Making a famine where abundance lies, But that the dread of something after death, In the deep bosom of the ocean buried."
     ];
 });
 

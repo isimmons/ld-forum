@@ -43,7 +43,7 @@ const menu = [
         name: "Create New Post",
         url: route('posts.create'),
         route: "posts.create",
-        when: () => usePage().props.auth.user,
+        when: () => usePage().props.permissions.create_posts,
     }
 ]
 </script>

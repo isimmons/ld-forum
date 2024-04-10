@@ -7,13 +7,25 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import MarkdownEditor from "@/Components/MarkdownEditor.vue";
+import {isProductionEnv} from "@/utils/environment.js";
 
 const postForm = useForm({
     'title': '',
     'body': '',
 });
-
 const createPost = () => postForm.post(route('posts.store'));
+
+const autofill = async () => {
+    if(isProductionEnv()) return;
+
+    const response = await axios.get('/local/post-content');
+
+    if(response.status === 200) {
+        postForm.title = response.data.title;
+        postForm.body = response.data.body;
+    }
+
+}
 </script>
 
 <template>
@@ -34,7 +46,19 @@ const createPost = () => postForm.post(route('posts.store'));
                         <InputLabel for="body"
                                     class="sr-only">Body
                         </InputLabel>
-                        <MarkdownEditor v-model="postForm.body" />
+                        <MarkdownEditor v-model="postForm.body">
+                            <template #toolbar="{ editor }">
+                                <li v-if="! isProductionEnv()">
+                                    <button @click="autofill"
+                                            type="button"
+                                            title="Autofill"
+                                            class="px-3 py-2"
+                                    >
+                                        <i class="ri-article-line"></i>
+                                    </button>
+                                </li>
+                            </template>
+                        </MarkdownEditor>
                         <InputError :message="postForm.errors.body" class="mt-1"/>
                     </div>
                     <div>

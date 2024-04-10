@@ -163,6 +163,7 @@ const promptUserForHref = () => {
                 </button>
             </li>
 
+            <slot name="toolbar" :editor="editor" />
 
         </menu>
         <EditorContent :editor="editor"/>

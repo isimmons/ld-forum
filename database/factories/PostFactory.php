@@ -5,20 +5,15 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
-use SplFileInfo;
-
-use function collect;
-use function database_path;
 use function str;
+
+use App\Support\PostFixtures;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
  */
 class PostFactory extends Factory
 {
-    private static Collection $fixtures;
-
     /**
      * Define the model's default state.
      *
@@ -33,22 +28,8 @@ class PostFactory extends Factory
                 ->join(PHP_EOL . PHP_EOL),
         ];
     }
-
     public function withFixture(): static
     {
-        $posts = static::getFixtures()
-            ->map(fn(string $contents) => str($contents)->explode("\n", 2))
-            ->map(fn(Collection $parts) => [
-                'title' => str($parts[0])->trim()->after('# '),
-                'body' => str($parts[1])->trim(),
-            ]);
-
-        return $this->sequence(...$posts);
-    }
-
-    private static function getFixtures(): Collection
-    {
-        return self::$fixtures ??= collect(File::files(database_path('factories/fixtures/posts')))
-            ->map(fn(SplFileInfo $fileInfo) => $fileInfo->getContents());
+        return $this->sequence(...PostFixtures::getFixtures());
     }
 }

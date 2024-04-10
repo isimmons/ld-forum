@@ -13,9 +13,10 @@ it('should return the correct component', function () {
 });
 
 it('should pass posts to the view', function () {
+    $this->dataSetAsStringWithData();
     $posts = Post::factory(3)->create();
 
-    $posts->load('user');
+    $posts->load(['user', 'topic']);
 
     get(route('posts.index'))
         ->assertOk()

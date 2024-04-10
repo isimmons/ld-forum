@@ -4,7 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+
 use App\Models\User;
+use App\Models\Topic;
 
 /**
  * @property int $id
@@ -14,7 +16,8 @@ use App\Models\User;
  * @property mixed $updated_at
  * @property mixed $created_at
  * @property User $user
- * @method showRoute
+ * @property Topic $topic
+ * @method showRoute(array $parameters = [])
  */
 class PostResource extends JsonResource
 {
@@ -33,6 +36,7 @@ class PostResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user', fn () => UserResource::make($this->user)),
+            'topic' => $this->whenLoaded('user', fn () => TopicResource::make($this->topic)),
             'routes' => [
                 'show' => $this->showRoute(),
             ]

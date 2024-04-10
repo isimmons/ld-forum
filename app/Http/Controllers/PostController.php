@@ -26,7 +26,7 @@ class PostController extends Controller
     public function index()
     {
         return inertia('Posts/Index', [
-            'posts' => PostResource::collection(Post::with('user')
+            'posts' => PostResource::collection(Post::with(['user', 'topic'])
                 ->latest()
                 ->latest('id')
                 ->paginate())
@@ -53,7 +53,8 @@ class PostController extends Controller
 
         $post = Post::create([
             ...$data,
-            'user_id' => $request->user()->id
+            'user_id' => $request->user()->id,
+            'topic_id' => $request->topic_id,
         ]);
 
         return redirect($post->showRoute());

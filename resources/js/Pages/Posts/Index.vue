@@ -15,6 +15,9 @@ const props = defineProps({
                 created_at: Date,
                 updated_at: Date,
                 routes: [String],
+                topic: {
+                    name: String,
+                }
             }
         ]
     }
@@ -27,7 +30,7 @@ const props = defineProps({
             <ul class="divide-y divide divide-slate-300 hover:divide-dotted">
                 <li v-for="post in posts.data"
                     :key="post.id"
-                    class="rounded-sm"
+                    class=" flex justify-between items-baseline flex-col md:flex-row rounded-sm"
                 >
                     <Link :href="post.routes.show" class="block group px-2 py-4 rounded-md hover:bg-slate-200">
                         <span class="font-semibold text-lg group-hover:text-indigo-500">{{ post.title }}</span>
@@ -37,6 +40,9 @@ const props = defineProps({
                                 {{ post.user.name }}
                             </span>
                         </span>
+                    </Link>
+                    <Link href="/" class="mb-2 rounded-full py-0.5 px-2 bg-emerald-100 text-emerald-900 text-sm font-semibold border border-emerald-900 hover:bg-emerald-500 hover:text-white">
+                        {{ post.topic.name }}
                     </Link>
                 </li>
             </ul>

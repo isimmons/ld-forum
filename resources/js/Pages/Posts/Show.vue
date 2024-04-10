@@ -12,6 +12,7 @@ import InputError from "@/Components/InputError.vue";
 import {computed, nextTick, ref} from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {useConfirm} from "@/Composables/useConfirm.js";
+import MarkdownEditor from "@/Components/MarkdownEditor.vue";
 
 const props = defineProps(['post', 'comments'])
 
@@ -112,9 +113,11 @@ const deleteComment = async (commentId) => {
                         <InputLabel for="body"
                                     class="sr-only">Comment
                         </InputLabel>
-                            <TextArea id="body"
+                            <MarkdownEditor id="body"
                                       ref="commentTextAreaRef"
                                       v-model="commentForm.body"
+                                      placeholder="What are you trying to say?"
+                                      editorClass="min-h-[160px]"
                             />
                         <InputError :message="commentForm.errors.body" class="mt-1"/>
                     </div>

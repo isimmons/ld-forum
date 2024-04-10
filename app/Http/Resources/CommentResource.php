@@ -10,6 +10,7 @@ use App\Models\User;
 /**
  * @property int $id
  * @property string $body
+ * @property string $html
  * @property mixed $created_at
  * @property mixed $updated_at
  * @property User user
@@ -27,6 +28,7 @@ class CommentResource extends JsonResource
         return [
             'id' => $this->id,
             'body' => $this->body,
+            'html' => $this->html,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user', fn () => UserResource::make($this->user)),

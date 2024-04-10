@@ -16,7 +16,8 @@ const emit = defineEmits(['delete', 'edit']);
             />
         </div>
         <div class="flex-1">
-            <p class="mt-1 break-all">{{ comment.body }}</p>
+            <div class="mt-1 prose prose-sm max-w-none" v-html="comment.html"></div>
+
             <span class="block pt-1 text-xs text-slate-600">
                 Written by
                 <span class="first-letter:uppercase font-semibold text-slate-600 text-sm">

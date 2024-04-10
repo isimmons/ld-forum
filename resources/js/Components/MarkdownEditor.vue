@@ -2,12 +2,15 @@
 import {EditorContent, useEditor} from "@tiptap/vue-3";
 import {StarterKit} from "@tiptap/starter-kit";
 import {Link} from "@tiptap/extension-link";
+import {Placeholder} from "@tiptap/extension-placeholder";
 import {watch} from "vue";
 import {Markdown} from "tiptap-markdown";
 import 'remixicon/fonts/remixicon.css';
 
 const props = defineProps({
     modelValue: '',
+    editorClass: '',
+    placeholder: null,
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -23,14 +26,17 @@ const editor = useEditor({
         }),
         Markdown,
         Link,
+        Placeholder.configure({ placeholder: props.placeholder }),
     ],
     editorProps: {
         attributes: {
-            class: 'prose prose-sm max-w-none py-1.5 px-3 min-h-[512px]',
+            class: `prose prose-sm max-w-none py-1.5 px-3 min-h-[512px] ${props.editorClass}`,
         },
     },
     onUpdate: () => emit('update:modelValue', editor.value?.storage.markdown.getMarkdown()),
 });
+
+defineExpose({ focus: () => editor.value.commands.focus() });
 
 watch(() => props.modelValue, (value) => {
     if (value === editor.value?.storage.markdown.getMarkdown()) return;
@@ -162,3 +168,9 @@ const promptUserForHref = () => {
         <EditorContent :editor="editor"/>
     </div>
 </template>
+
+<style scoped lang="postcss">
+:deep(.tiptap p.is-editor-empty:first-child::before) {
+    @apply text-slate-400 float-left h-0 pointer-events-none content-[attr(data-placeholder)];
+}
+</style>

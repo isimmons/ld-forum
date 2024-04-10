@@ -10,6 +10,7 @@ use App\Models\User;
  * @property int $id
  * @property string $title
  * @property string $body
+ * @property string $html
  * @property mixed $updated_at
  * @property mixed $created_at
  * @property User $user
@@ -28,6 +29,7 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'body' => $this->body,
+            'html' => $this->html,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user', fn () => UserResource::make($this->user)),

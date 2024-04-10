@@ -21,3 +21,11 @@ it('should generate a route to the show page with additional parameters', functi
     expect($post->showRoute(['page' => 2]))
         ->toBe(route('posts.show', [$post, Str::slug($post->title), 'page' => 2]));
 });
+
+it('should generate html from new and updated posts', function () {
+    $post = Post::factory()->make([ 'body' => '## Hello world' ]);
+
+    $post->save();
+
+    expect($post->html)->toEqual(str($post->body)->markdown());
+});

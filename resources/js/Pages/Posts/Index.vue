@@ -4,6 +4,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import Container from "@/Components/Container.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { relativeDate } from "@/utils/date.js";
+import PageHeading from "@/Components/PageHeading.vue";
 
 const props = defineProps({
     posts: {
@@ -17,9 +18,14 @@ const props = defineProps({
                 routes: [String],
                 topic: {
                     name: String,
+                    slug: String,
                 }
             }
         ]
+    },
+    selectedTopic: {
+        name: String,
+        description: String,
     }
 });
 </script>
@@ -27,7 +33,14 @@ const props = defineProps({
 <template>
     <AppLayout>
         <Container>
-            <ul class="divide-y divide divide-slate-300 hover:divide-dotted">
+
+            <div>
+                <Link :href="route('posts.index')" class="text-indigo-500 hover:text-indigo-700 block mb-2"><- Back to all posts</Link>
+                <PageHeading v-text="selectedTopic ? selectedTopic.name : 'All posts'" />
+                <p v-if="selectedTopic" class="mt-1 text-slate-600 text-sm">{{ selectedTopic.description }}</p>
+            </div>
+
+            <ul class=" mt-4 divide-y divide divide-slate-300 hover:divide-dotted">
                 <li v-for="post in posts.data"
                     :key="post.id"
                     class=" flex justify-between items-baseline flex-col md:flex-row rounded-sm"
@@ -41,7 +54,7 @@ const props = defineProps({
                             </span>
                         </span>
                     </Link>
-                    <Link href="/" class="mb-2 rounded-full py-0.5 px-2 bg-emerald-100 text-emerald-900 text-sm font-semibold border border-emerald-900 hover:bg-emerald-500 hover:text-white">
+                    <Link :href="route('posts.index', { topic: post.topic.slug })" class="mb-2 rounded-full py-0.5 px-2 bg-emerald-100 text-emerald-900 text-sm font-semibold border border-emerald-900 hover:bg-emerald-500 hover:text-white">
                         {{ post.topic.name }}
                     </Link>
                 </li>

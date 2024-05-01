@@ -26,16 +26,14 @@ Route::middleware([
     })->name('dashboard');
 
 
-    Route::resource('posts.comments', CommentController::class)
-        ->shallow()->only(['store', 'update', 'destroy']);
-
-    Route::resource('posts', PostController::class)
-        ->only(['create','store', 'update', 'destroy']);
+    Route::resource('posts', PostController::class)->only(['create', 'store']);
+    Route::resource('posts.comments', CommentController::class)->shallow()->only(['store', 'update', 'destroy']);
 
 });
 
+
+// posts
+Route::get('posts/{topic?}', [PostController::class, 'index'])->name('posts.index');
+
 Route::get('posts/{post}/{slug}', [PostController::class, 'show'])
     ->name('posts.show');
-
-Route::resource('posts', PostController::class)
-    ->only(['index']);

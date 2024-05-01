@@ -23,6 +23,14 @@ it('should pass posts to the view', function () {
         ->assertHasPaginatedResource('posts', PostResource::collection($posts->reverse()));
 });
 
+it('should pass topics to the view', function(){
+    $topics = Topic::factory(3)->create();
+
+    get(route('posts.index'))
+        ->assertOk()
+        ->assertHasResource('topics', TopicResource::collection($topics));
+});
+
 it('should filter posts by topic', function () {
     $general = Topic::factory()->create();
 

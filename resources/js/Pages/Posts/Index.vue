@@ -1,10 +1,11 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import {Link} from '@inertiajs/vue3';
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Container from "@/Components/Container.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { relativeDate } from "@/utils/date.js";
+import {relativeDate} from "@/utils/date.js";
 import PageHeading from "@/Components/PageHeading.vue";
+import Pill from "@/Components/Pill.vue";
 
 const props = defineProps({
     posts: {
@@ -23,6 +24,13 @@ const props = defineProps({
             }
         ]
     },
+    topics: [
+        {
+            id: String,
+            name: String,
+            slug: String,
+        }
+    ],
     selectedTopic: {
         name: String,
         description: String,
@@ -35,9 +43,29 @@ const props = defineProps({
         <Container>
 
             <div>
-                <Link :href="route('posts.index')" class="text-indigo-500 hover:text-indigo-700 block mb-2"><- Back to all posts</Link>
-                <PageHeading v-text="selectedTopic ? selectedTopic.name : 'All posts'" />
-                <p v-if="selectedTopic" class="mt-1 text-slate-600 text-sm">{{ selectedTopic.description }}</p>
+                <PageHeading v-text="selectedTopic ? selectedTopic.name : 'All posts'"/>
+                <p v-if="selectedTopic"
+                   class="mt-1 text-slate-600 text-sm">{{ selectedTopic.description }}</p>
+
+                <menu class="flex space-x-2 mt-3 overflow-x-auto pb-2 pt-1">
+                    <li>
+                        <Pill
+                            :href="route('posts.index')"
+                            :is-active="!selectedTopic"
+                        >All Posts</Pill>
+                    </li>
+                    <li
+                        v-for="topic in topics"
+                        :key="topic.id"
+                    >
+                        <Pill
+                            :href="route('posts.index', { topic: topic.slug })"
+                            :is-active="topic.id === selectedTopic?.id"
+                        >
+                            {{ topic.name }}
+                        </Pill>
+                    </li>
+                </menu>
             </div>
 
             <ul class=" mt-4 divide-y divide divide-slate-300 hover:divide-dotted">
@@ -45,7 +73,8 @@ const props = defineProps({
                     :key="post.id"
                     class=" flex justify-between items-baseline flex-col md:flex-row rounded-sm"
                 >
-                    <Link :href="post.routes.show" class="block group px-2 py-4 rounded-md hover:bg-slate-200">
+                    <Link :href="post.routes.show"
+                          class="block group px-2 py-4 rounded-md hover:bg-slate-200">
                         <span class="font-semibold text-lg group-hover:text-indigo-500">{{ post.title }}</span>
                         <span class="block pt-1 text-sm text-slate-600">
                             Written {{ relativeDate(post.created_at) }} by
@@ -54,13 +83,14 @@ const props = defineProps({
                             </span>
                         </span>
                     </Link>
-                    <Link :href="route('posts.index', { topic: post.topic.slug })" class="mb-2 rounded-full py-0.5 px-2 bg-emerald-100 text-emerald-900 text-sm font-semibold border border-emerald-900 hover:bg-emerald-500 hover:text-white">
-                        {{ post.topic.name }}
-                    </Link>
+
+                    <Pill :href="route('posts.index', { topic: post.topic.slug })">{{ post.topic.name }}</Pill>
+
                 </li>
             </ul>
 
-            <Pagination :meta="posts.meta" :only="['posts']" />
+            <Pagination :meta="posts.meta"
+                        :only="['posts']"/>
         </Container>
     </AppLayout>
 </template>

@@ -18,7 +18,7 @@ it('should return the correct component', function () {
 
 it('should pass a post to the view', function () {
     $post = Post::factory()->create();
-    $post->load('user');
+    $post->load('user', 'topic');
 
     get($post->showRoute())
         ->assertOk()

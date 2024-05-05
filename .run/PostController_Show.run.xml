@@ -1,10 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="PostController/Show" type="PestRunConfigurationType">
-    <CommandLine>
-      <PhpTestInterpreterSettings>
-        <option name="interpreterName" value="PHP 8.3.4" />
-      </PhpTestInterpreterSettings>
-    </CommandLine>
     <option name="pestRunnerSettings">
       <PestRunner configuration_file="$PROJECT_DIR$/phpunit.xml" directory="$PROJECT_DIR$/tests/Feature" file="$PROJECT_DIR$/tests/Feature/Controllers/PostController/ShowTest.php" method="" scope="File" use_alternative_configuration_file="true" />
     </option>

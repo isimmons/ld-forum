@@ -16,6 +16,11 @@ dataset(name: 'invalid_post_data', dataset: [
     [[ 'title' =>  str_repeat('a', 9) ], 'title'],
     [[ 'title' =>  str_repeat('a', 121) ], 'title'],
 
+    [[ 'topic_id' =>  null ], 'topic_id'],
+    [[ 'topic_id' =>  -1 ], 'topic_id'], // can't exist in the db
+    [[ 'topic_id' =>  'a' ], 'topic_id'],
+    [[ 'topic_id' =>  2.5 ], 'topic_id'],
+
     [[ 'body' =>  null ], 'body'],
     [[ 'body' =>  1 ], 'body'],
     [[ 'body' =>  2.5 ], 'body'],

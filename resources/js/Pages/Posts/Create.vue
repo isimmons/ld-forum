@@ -10,8 +10,11 @@ import MarkdownEditor from "@/Components/MarkdownEditor.vue";
 import {isProductionEnv} from "@/utils/environment.js";
 import PageHeading from "@/Components/PageHeading.vue";
 
+const props = defineProps(['topics'])
+
 const postForm = useForm({
     'title': '',
+    'topic_id': props.topics[0].id,
     'body': '',
 });
 const createPost = () => postForm.post(route('posts.store'));
@@ -43,6 +46,18 @@ const autofill = async () => {
                         <TextInput id="title" v-model="postForm.title" class="w-full" />
                         <InputError :message="postForm.errors.title" class="mt-1"/>
                     </div>
+
+                    <div>
+                        <InputLabel for="topic_id">Select a Topic</InputLabel>
+                        <select v-model="postForm.topic_id" name="topic_id" id="topic_id" class="mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <option v-for="topic in topics" :key="topic.id" :value="topic.id">
+                                {{ topic.name }}
+                            </option>
+                        </select>
+                        <InputError :message="postForm.errors.topic_id" class="mt-1"/>
+
+                    </div>
+
                     <div>
                         <InputLabel for="body"
                                     class="sr-only">Body

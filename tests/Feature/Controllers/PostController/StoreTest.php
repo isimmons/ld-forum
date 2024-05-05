@@ -3,14 +3,15 @@
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
 
+use App\Models\Topic;
 use App\Models\User;
 use App\Models\Post;
 
 beforeEach(function () {
-    $this->validPost = [
+    $this->validPost = fn() => [
         'title' => 'Hello World',
         'body' => "to be, or not to be, that is the question In faith, I will. let me peruse this face. Making a famine where abundance lies, But that the dread of something after death, In the deep bosom of the ocean buried.",
-        'topic_id' => 1,
+        'topic_id' => Topic::factory()->create()->getKey(),
     ];
 });
 
@@ -21,11 +22,12 @@ it('requires authentication', function() {
 
 it('should store a post', function() {
     $user = User::factory()->create();
+    $data = value($this->validPost);
 
-    actingAs($user)->post(route('posts.store'), $this->validPost );
+    actingAs($user)->post(route('posts.store'), $data );
 
     $this->assertDatabaseHas(Post::class, [
-        ...$this->validPost,
+        ...$data,
         'user_id' => $user->id
     ]);
 });
@@ -33,12 +35,12 @@ it('should store a post', function() {
 it('should redirect to the post show page', function () {
     $user = User::factory()->create();
 
-    actingAs($user)->post(route('posts.store'), $this->validPost)
+    actingAs($user)->post(route('posts.store'), value($this->validPost))
         ->assertRedirect(Post::latest('id')->first()->showRoute());
 });
 
 
 it('should require valid data', function (array $badData, array|string $errors ) {
-    actingAs(User::factory()->create())->post(route('posts.store'), [ ...$this->validPost, ...$badData ] )
+    actingAs(User::factory()->create())->post(route('posts.store'), [ ...value($this->validPost), ...$badData ] )
         ->assertInvalid($errors);
 })->with('invalid_post_data');

@@ -6,10 +6,10 @@ import {relativeDate} from "@/utils/date.js";
 import Comment from "@/Components/Comment.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {router, useForm} from "@inertiajs/vue3";
+import {router, useForm, usePage} from "@inertiajs/vue3";
 import TextArea from "@/Components/TextArea.vue";
 import InputError from "@/Components/InputError.vue";
-import {computed, nextTick, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import {useConfirm} from "@/Composables/useConfirm.js";
 import MarkdownEditor from "@/Components/MarkdownEditor.vue";
@@ -17,6 +17,12 @@ import PageHeading from "@/Components/PageHeading.vue";
 import Pill from "@/Components/Pill.vue";
 
 const props = defineProps(['post', 'comments'])
+
+onMounted(() => {
+   const page = new URLSearchParams(window.location.search).get("page");
+   if(page > 1 && props.comments.meta.links.length < 2)
+       router.replace(location.href.replace(location.search, ''));
+});
 
 const commentForm = useForm({body: ''});
 
@@ -86,7 +92,9 @@ const deleteComment = async (commentId) => {
 
      router.delete(route('comments.destroy', {
         comment: commentId,
-        page: props.comments.meta.current_page
+        page: props.comments.data.length > 1
+            ? props.comments.meta.current_page
+            : Math.max(props.comments.meta.current_page -1, 1)
     }), {
         preserveScroll: true
     })

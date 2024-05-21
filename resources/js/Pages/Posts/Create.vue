@@ -62,7 +62,7 @@ const autofill = async () => {
                         <InputLabel for="body"
                                     class="sr-only">Body
                         </InputLabel>
-                        <MarkdownEditor v-model="postForm.body">
+                        <MarkdownEditor v-model="postForm.body" editorClass="min-h-[512px]">
                             <template #toolbar="{ editor }">
                                 <li v-if="! isProductionEnv()">
                                     <button @click="autofill"

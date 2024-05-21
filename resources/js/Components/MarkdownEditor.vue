@@ -35,7 +35,7 @@ const editor = useEditor({
     ],
     editorProps: {
         attributes: {
-            class: `prose prose-sm max-w-none py-1.5 px-3 min-h-[512px] ${props.editorClass}`,
+            class: `prose prose-sm max-w-none py-1.5 px-3 ${props.editorClass}`,
         },
     },
     onUpdate: () => model.value = editor.value?.storage.markdown.getMarkdown(),

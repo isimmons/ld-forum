@@ -79,6 +79,8 @@ const props = defineProps({
     }
 });
 
+const only = computed(() => props.only.length === 0 ? [] : [...props.only, 'jetstream']);
+
 const previousUrl = computed(() => props.meta.links.shift().url);
 const nextUrl = computed(() => props.meta.links.pop().url);
 

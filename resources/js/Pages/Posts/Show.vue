@@ -6,7 +6,7 @@ import {relativeDate} from "@/utils/date.js";
 import Comment from "@/Components/Comment.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {router, useForm, usePage} from "@inertiajs/vue3";
+import {router, useForm, Head} from "@inertiajs/vue3";
 import TextArea from "@/Components/TextArea.vue";
 import InputError from "@/Components/InputError.vue";
 import {computed, onMounted, ref} from "vue";
@@ -21,7 +21,7 @@ const props = defineProps(['post', 'comments'])
 onMounted(() => {
    const page = new URLSearchParams(window.location.search).get("page");
    if(page > 1 && props.comments.meta.links.length < 2)
-       router.replace(location.href.replace(location.search, ''));
+       router.replace(props.post.routes.show);
 });
 
 const commentForm = useForm({body: ''});
@@ -103,7 +103,11 @@ const deleteComment = async (commentId) => {
 
 </script>
 
+
 <template>
+    <Head>
+    <link rel="canonical" :href="post.routes.show">
+    </Head>
     <AppLayout :title="post.title">
         <Container>
             <Pill :href="route('posts.index', { topic: post.topic.slug})">{{ post.topic.name }}</Pill>

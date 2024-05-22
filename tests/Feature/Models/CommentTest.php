@@ -3,7 +3,7 @@
 use App\Models\Comment;
 
 it('should generate html from new and updated comments', function () {
-    $comment = Comment::factory()->make([ 'body' => '## Hello world' ]);
+    $comment = Comment::factory()->make(['body' => '## Hello world']);
 
     $comment->save();
 

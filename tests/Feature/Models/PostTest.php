@@ -4,7 +4,7 @@ use App\Models\Post;
 use Illuminate\Support\Str;
 
 it('should use Title Case for titles', function () {
-    $post = Post::factory()->create([ 'title' => 'Hello, how are you?' ]);
+    $post = Post::factory()->create(['title' => 'Hello, how are you?']);
 
     expect($post->title)->toBe('Hello, How Are You?');
 });
@@ -12,18 +12,28 @@ it('should use Title Case for titles', function () {
 it('should generate a route to the show page', function () {
     $post = Post::factory()->create();
 
-    expect($post->showRoute())->toBe(route('posts.show', [$post, Str::slug($post->title)]));
+    expect($post->showRoute())->toBe(
+        route('posts.show', [$post, Str::slug($post->title)])
+    );
 });
 
-it('should generate a route to the show page with additional parameters', function () {
-    $post = Post::factory()->create();
+it(
+    'should generate a route to the show page with additional parameters',
+    function () {
+        $post = Post::factory()->create();
 
-    expect($post->showRoute(['page' => 2]))
-        ->toBe(route('posts.show', [$post, Str::slug($post->title), 'page' => 2]));
-});
+        expect($post->showRoute(['page' => 2]))
+            ->toBe(
+                route(
+                    'posts.show',
+                    [$post, Str::slug($post->title), 'page' => 2]
+                )
+            );
+    }
+);
 
 it('should generate html from new and updated posts', function () {
-    $post = Post::factory()->make([ 'body' => '## Hello world' ]);
+    $post = Post::factory()->make(['body' => '## Hello world']);
 
     $post->save();
 

@@ -1,14 +1,11 @@
 <?php
 
 use App\Http\Resources\TopicResource;
-use App\Models\Topic;
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\post;
-use function Pest\Laravel\get;
+use App\Models\{Topic, User};
 
-use App\Models\User;
+use function Pest\Laravel\{actingAs, get};
 
-it('requires authentication', function() {
+it('requires authentication', function () {
     get(route('posts.create'))
         ->assertRedirect(route('login'));
 });

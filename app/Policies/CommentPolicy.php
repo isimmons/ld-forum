@@ -2,23 +2,27 @@
 
 namespace App\Policies;
 
-use App\Models\Comment;
-use App\Models\User;
+use App\Models\{Comment, User};
 
 class CommentPolicy
 {
     /**
-     * Determine whether the user can create comments
-     * Any user can create a comment
+     * Only authenticated users can create comments.
+     *
+     * @param User $user
+     * @return bool
      */
     public function create(User $user): bool
     {
-        return true;
+        return (bool)$user;
     }
 
     /**
-     * Determine whether the user can update the comment
-     * A user can only update their own comment
+     * Authenticated users can update only their own comments.
+     *
+     * @param User $user
+     * @param Comment $comment
+     * @return bool
      */
     public function update(User $user, Comment $comment): bool
     {
@@ -26,12 +30,17 @@ class CommentPolicy
     }
 
     /**
-     * Determine whether the user can delete the comment
-     * A user can only delete their own comment
+     * Authenticated users can delete only their own comments.
+     *
+     * @param User $user
+     * @param Comment $comment
+     * @return bool
      */
     public function delete(User $user, Comment $comment): bool
     {
-        if($user->id !== $comment->user_id) return false;
+        if ($user->id !== $comment->user_id) {
+            return false;
+        }
 
         return $comment->created_at->isAfter(now()->subHour());
     }

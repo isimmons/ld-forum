@@ -1,12 +1,10 @@
 <?php
 
-use function Pest\Laravel\actingAs;
-use function Pest\Laravel\delete;
+use App\Models\{Comment, User};
 
-use App\Models\Comment;
-use App\Models\User;
+use function Pest\Laravel\{actingAs, delete};
 
-it('requires authentication', function() {
+it('requires authentication', function () {
     delete(route('comments.destroy', Comment::factory()->create()))
         ->assertRedirect(route('login'));
 });
@@ -50,10 +48,15 @@ it('should redirect to the posts show page', function () {
         ->assertRedirect($comment->post->showRoute());
 });
 
-it('should redirect to the posts show page with the page query parameter', function () {
-    $comment = Comment::factory()->create();
+it(
+    'should redirect to the posts show page with the page query parameter',
+    function () {
+        $comment = Comment::factory()->create();
 
-    actingAs($comment->user)
-        ->delete(route('comments.destroy', [ 'comment' => $comment, 'page' => 2 ]))
-        ->assertRedirect($comment->post->showRoute(['page' => 2]));
-});
+        actingAs($comment->user)
+            ->delete(
+                route('comments.destroy', ['comment' => $comment, 'page' => 2])
+            )
+            ->assertRedirect($comment->post->showRoute(['page' => 2]));
+    }
+);

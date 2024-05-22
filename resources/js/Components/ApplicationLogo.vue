@@ -1,3 +1,3 @@
 <template>
-    <img src="/assets/framerate-analog.svg" alt="Framerate logo">
+  <img src="/assets/framerate-analog.svg" alt="Framerate logo" />
 </template>

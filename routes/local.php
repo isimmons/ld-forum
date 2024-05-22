@@ -8,5 +8,3 @@ Route::middleware('api')->group(function () {
         return PostFixtures::getFixtures()->random();
     });
 });
-
-Route::middleware('web')->group(function () {});

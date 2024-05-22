@@ -2,10 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-
-use App\Models\Post;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -22,6 +21,8 @@ class HandleInertiaRequests extends Middleware
      * Determines the current asset version.
      *
      * @see https://inertiajs.com/asset-versioning
+     * @param Request $request
+     * @return string|null
      */
     public function version(Request $request): ?string
     {
@@ -33,6 +34,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/shared-data
      *
+     * @param Request $request
      * @return array<string, mixed>
      */
     public function share(Request $request): array

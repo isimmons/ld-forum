@@ -2,34 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TopicResource;
-use App\Models\Topic;
+use App\Http\Resources\{CommentResource, PostResource, TopicResource};
+use App\Models\{Post, Topic};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\PostResource;
-use App\Models\Post;
 use Illuminate\Support\Str;
+use Inertia\Response;
+use Inertia\ResponseFactory;
 
 class PostController extends Controller
 {
     use AuthorizesRequests;
 
+    /**
+     * Construct an instance of PostController.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->authorizeResource(Post::class);
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the posts.
+     *
+     * @param Topic|null $topic
+     * @return Response|ResponseFactory
      */
-    public function index(Topic $topic = null)
+    public function index(Topic $topic = null): Response|ResponseFactory
     {
         $posts = Post::with(['user', 'topic'])
-            ->when($topic, fn (Builder $query) => $query->whereBelongsTo($topic))
+            ->when($topic, fn(Builder $query) => $query->whereBelongsTo($topic))
             ->latest()
             ->latest('id')
             ->paginate();
@@ -37,12 +44,16 @@ class PostController extends Controller
         return inertia('Posts/Index', [
             'posts' => PostResource::collection($posts),
             'topics' => fn() => TopicResource::collection(Topic::all()),
-            'selectedTopic' => fn() => $topic ? TopicResource::make($topic) : null,
+            'selectedTopic' => fn() => $topic ? TopicResource::make(
+                $topic
+            ) : null,
         ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new post.
+     *
+     * @return Response|ResponseFactory
      */
     public function create()
     {
@@ -52,9 +63,12 @@ class PostController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created post in storage.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'min:10', 'max:120'],
@@ -71,46 +85,29 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified post.
+     *
+     * @param Request $request
+     * @param Post $post
+     * @return RedirectResponse|Response|ResponseFactory
      */
-    public function show(Request $request, Post $post)
-    {
-        if (! Str::endsWith($post->showRoute(), $request->path())) {
+    public function show(
+        Request $request,
+        Post $post
+    ): RedirectResponse|Response|ResponseFactory {
+        if (!Str::endsWith($post->showRoute(), $request->path())) {
             return redirect($post->showRoute($request->query()), status: 301);
         }
 
-
         return inertia('Posts/Show', [
-            'post' => fn () => PostResource::make($post->load('user', 'topic')),
-            'comments' => fn () => CommentResource::collection($post->comments()
-                ->with('user')
-                ->latest()
-                ->latest('id')
-                ->paginate(10))
+            'post' => fn() => PostResource::make($post->load('user', 'topic')),
+            'comments' => fn() => CommentResource::collection(
+                $post->comments()
+                    ->with('user')
+                    ->latest()
+                    ->latest('id')
+                    ->paginate(10)
+            )
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
-    {
-        //
     }
 }

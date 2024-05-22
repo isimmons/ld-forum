@@ -2,13 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\Topic;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
-use Illuminate\Support\Collection;
-use function str;
-
+use App\Models\{Topic, User};
 use App\Support\PostFixtures;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Collection;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
@@ -30,6 +27,12 @@ class PostFactory extends Factory
                 ->join(PHP_EOL . PHP_EOL),
         ];
     }
+
+    /**
+     * Get the posts fixtures.
+     *
+     * @return $this
+     */
     public function withFixture(): static
     {
         return $this->sequence(...PostFixtures::getFixtures());

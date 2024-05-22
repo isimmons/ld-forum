@@ -2,12 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\{Comment, Post, Topic, User};
 use Illuminate\Database\Seeder;
-
-use App\Models\Comment;
-use App\Models\Post;
-use App\Models\Topic;
-use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,14 +23,13 @@ class DatabaseSeeder extends Seeder
             ->recycle([$users, $topics])
             ->create();
 
-//        $comments = Comment::factory(100)->recycle([$users, $posts])->create();
 
-        $ian = User::factory()
+        User::factory()
             ->has(Post::factory(45)->recycle($topics)->withFixture())
             ->has(Comment::factory(120)->recycle($posts))
             ->create([
-            'name' => 'Ian Simmons',
-            'email' => 'test@example.com',
-        ]);
+                'name' => 'Ian Simmons',
+                'email' => 'test@example.com',
+            ]);
     }
 }

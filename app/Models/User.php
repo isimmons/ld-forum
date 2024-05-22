@@ -9,11 +9,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
-//use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-//    use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
@@ -24,11 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ['name', 'email', 'password'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -51,11 +45,21 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
+    /**
+     * Relationship: A user has many posts.
+     *
+     * @return HasMany
+     */
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
 
+    /**
+     * Relationship: A user has many comments.
+     *
+     * @return HasMany
+     */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);

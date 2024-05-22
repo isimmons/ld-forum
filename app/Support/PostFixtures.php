@@ -6,10 +6,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use SplFileInfo;
 
-use function collect;
-use function database_path;
-use function str;
-
 class PostFixtures
 {
     public static function getFixtures(): Collection

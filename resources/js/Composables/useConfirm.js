@@ -1,47 +1,46 @@
-import {reactive, readonly} from "vue";
+import { reactive, readonly } from 'vue';
 
 const globalState = reactive({
-    show: false,
-    title: '',
-    message: '',
-    resolver: null,
+  show: false,
+  title: '',
+  message: '',
+  resolver: null,
 });
 
 export function useConfirm() {
-    const resetModal = () => {
-        globalState.show = false;
-        globalState.title = '';
-        globalState.message = '';
-        globalState.resolver = null;
-    }
+  const resetModal = () => {
+    globalState.show = false;
+    globalState.title = '';
+    globalState.message = '';
+    globalState.resolver = null;
+  };
 
-    return {
-        state: readonly(globalState),
-        confirmation: (message, title = 'Please Confirm') => {
-            globalState.title = title;
-            globalState.message = message;
-            globalState.show = true;
+  return {
+    state: readonly(globalState),
+    confirmation: (message, title = 'Please Confirm') => {
+      globalState.title = title;
+      globalState.message = message;
+      globalState.show = true;
 
-            return new Promise((resolver) => {
-               globalState.resolver = resolver;
-            });
-        },
+      return new Promise((resolver) => {
+        globalState.resolver = resolver;
+      });
+    },
 
-        confirm: () => {
-            if(globalState.resolver) {
-               globalState.resolver(true);
-            }
+    confirm: () => {
+      if (globalState.resolver) {
+        globalState.resolver(true);
+      }
 
-            resetModal();
-        },
+      resetModal();
+    },
 
-        cancel: () => {
-            if(globalState.resolver) {
-                globalState.resolver(false);
-            }
+    cancel: () => {
+      if (globalState.resolver) {
+        globalState.resolver(false);
+      }
 
-            resetModal();
-        }
-    }
+      resetModal();
+    },
+  };
 }
-

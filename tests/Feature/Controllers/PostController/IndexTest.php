@@ -1,11 +1,9 @@
 <?php
 
-use App\Http\Resources\TopicResource;
-use App\Models\Topic;
-use function Pest\Laravel\get;
+use App\Http\Resources\{PostResource, TopicResource};
+use App\Models\{Post, Topic};
 
-use App\Http\Resources\PostResource;
-use App\Models\Post;
+use function Pest\Laravel\get;
 
 it('should return the correct component', function () {
     get(route('posts.index'))
@@ -20,10 +18,13 @@ it('should pass posts to the view', function () {
 
     get(route('posts.index'))
         ->assertOk()
-        ->assertHasPaginatedResource('posts', PostResource::collection($posts->reverse()));
+        ->assertHasPaginatedResource(
+            'posts',
+            PostResource::collection($posts->reverse())
+        );
 });
 
-it('should pass topics to the view', function(){
+it('should pass topics to the view', function () {
     $topics = Topic::factory(3)->create();
 
     get(route('posts.index'))
@@ -40,7 +41,10 @@ it('should filter posts by topic', function () {
     $posts->load(['user', 'topic']);
 
     get(route('posts.index', ['topic' => $general]))
-        ->assertHasPaginatedResource('posts', PostResource::collection($posts->reverse()));
+        ->assertHasPaginatedResource(
+            'posts',
+            PostResource::collection($posts->reverse())
+        );
 });
 
 it('should pass the selected topic to the view', function () {

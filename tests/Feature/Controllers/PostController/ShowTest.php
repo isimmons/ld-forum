@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Resources\CommentResource;
-use App\Http\Resources\PostResource;
-use App\Models\Comment;
-use App\Models\Post;
+use App\Http\Resources\{CommentResource, PostResource};
+use App\Models\{Comment, Post};
 
 use function Pest\Laravel\get;
 
@@ -31,12 +29,18 @@ it('should pass comments to the view', function () {
     $comments->load('user');
     get($post->showRoute())
         ->assertOk()
-        ->assertHasPaginatedResource('comments', CommentResource::collection($comments->reverse()));
+        ->assertHasPaginatedResource(
+            'comments',
+            CommentResource::collection($comments->reverse())
+        );
 });
 
-it('should redirect to correct url if the slug is incorrect', function ( string $incorrectSlug) {
-    $post = Post::factory()->create(['title' => 'Hello world']);
+it(
+    'should redirect to correct url if the slug is incorrect',
+    function (string $incorrectSlug) {
+        $post = Post::factory()->create(['title' => 'Hello world']);
 
-    get(route('posts.show', [$post, $incorrectSlug, 'page' => 2]))
-        ->assertRedirect($post->showRoute(['page' => 2]));
-})->with(['foo-bar', 'hello']);
+        get(route('posts.show', [$post, $incorrectSlug, 'page' => 2]))
+            ->assertRedirect($post->showRoute(['page' => 2]));
+    }
+)->with(['foo-bar', 'hello']);

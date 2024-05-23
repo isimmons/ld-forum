@@ -1,24 +1,23 @@
 <script setup lang="ts">
-import { EditorContent, useEditor } from '@tiptap/vue-3';
+import { Content, Editor, EditorContent, useEditor } from '@tiptap/vue-3';
 import { StarterKit } from '@tiptap/starter-kit';
 import { Link } from '@tiptap/extension-link';
 import { Placeholder } from '@tiptap/extension-placeholder';
-import { onMounted, watch } from 'vue';
+import { onMounted, ShallowRef, watch } from 'vue';
 import { Markdown } from 'tiptap-markdown';
 import 'remixicon/fonts/remixicon.css';
 
-const props = defineProps({
-  editorClass: {
-    type: String,
-    default: '',
-  },
-  placeholder: {
-    type: String,
-    default: null,
-  },
+type Props = {
+  editorClass?: string;
+  placeholder?: string;
+};
+
+const props = withDefaults(defineProps<Props>(), {
+  editorClass: '',
+  placeholder: '',
 });
 
-const model = defineModel();
+const model = defineModel<Editor>();
 
 const editor = useEditor({
   extensions: [
@@ -38,42 +37,42 @@ const editor = useEditor({
       class: `prose prose-sm max-w-none py-1.5 px-3 ${props.editorClass}`,
     },
   },
-  onUpdate: () => (model.value = editor.value?.storage.markdown.getMarkdown()),
-});
+  onUpdate: () => (model.value = editor.value.storage.markdown.getMarkdown()),
+}) as ShallowRef<Editor>;
 
 defineExpose({ focus: () => editor.value.commands.focus() });
 
 onMounted(() => {
   watch(
     model,
-    (value) => {
-      if (value === editor.value?.storage.markdown.getMarkdown()) return;
+    (value: Content) => {
+      if (value === editor.value.storage.markdown.getMarkdown()) return;
 
-      editor.value?.commands.setContent(value);
+      editor.value.commands.setContent(value);
     },
     { immediate: true },
   );
 });
 
 const promptUserForHref = () => {
-  if (editor.value?.isActive('link')) {
-    return editor.value?.chain().unsetLink().run();
+  if (editor.value.isActive('link')) {
+    return editor.value.chain().unsetLink().run();
   }
 
   const href = prompt('Where do you want to link to?');
 
   if (!href) {
-    return editor.value?.chain().focus().run();
+    return editor.value.chain().focus().run();
   }
 
-  return editor.value?.chain().focus().setLink({ href }).run();
+  return editor.value.chain().focus().setLink({ href }).run();
 };
 </script>
 
 <template>
   <div
     v-if="editor"
-    class="bg-white rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+    class="rounded-md border-0 bg-white shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
   >
     <menu class="flex divide-x divide-slate-200 border-b border-slate-200">
       <li>
@@ -81,7 +80,7 @@ const promptUserForHref = () => {
           @click="() => editor.chain().focus().toggleBold().run()"
           type="button"
           title="Bold"
-          class="px-3 py-2 rounded-tl-md"
+          class="rounded-tl-md px-3 py-2"
           :class="[
             editor.isActive('bold')
               ? 'bg-slate-600 text-slate-200'
@@ -241,6 +240,6 @@ const promptUserForHref = () => {
 
 <style scoped lang="postcss">
 :deep(.tiptap p.is-editor-empty:first-child::before) {
-  @apply text-slate-400 float-left h-0 pointer-events-none content-[attr(data-placeholder)];
+  @apply pointer-events-none float-left h-0 text-slate-400 content-[attr(data-placeholder)];
 }
 </style>

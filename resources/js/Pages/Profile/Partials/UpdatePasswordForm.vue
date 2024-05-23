@@ -47,6 +47,13 @@ const updatePassword = () => {
 
     <template #form>
       <div class="col-span-6 sm:col-span-4">
+        <input
+          hidden
+          type="text"
+          name="username"
+          autocomplete="username"
+          :value="$page.props.auth.user.username"
+        />
         <InputLabel for="current_password" value="Current Password" />
         <TextInput
           id="current_password"

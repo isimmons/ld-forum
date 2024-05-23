@@ -41,6 +41,8 @@ class PostController extends Controller
             ->latest('id')
             ->paginate();
 
+
+
         return inertia('Posts/Index', [
             'posts' => PostResource::collection($posts),
             'topics' => fn() => TopicResource::collection(Topic::all()),

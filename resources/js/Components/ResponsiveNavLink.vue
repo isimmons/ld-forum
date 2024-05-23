@@ -2,10 +2,16 @@
 import { computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
-const props = defineProps({
-  active: Boolean,
-  href: String,
-  as: String,
+type Props = {
+  active?: boolean;
+  href?: string;
+  as?: string;
+};
+
+const props = withDefaults(defineProps<Props>(), {
+  active: false,
+  as: 'a',
+  href: '#',
 });
 
 const classes = computed(() => {

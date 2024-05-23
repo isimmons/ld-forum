@@ -1,25 +1,27 @@
-<script setup>
+<script setup lang="ts">
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import type { PaginationLink } from '@/@types';
 
-const props = defineProps({
+type Props = {
   meta: {
-    type: Object,
-    required: true,
-  },
-  only: {
-    type: Array,
-    default: () => [],
-  },
-});
+    links: Array<PaginationLink>;
+    from: number;
+    to: number;
+    total: number;
+  };
+  only: Array<string>;
+};
+
+const props = defineProps<Props>();
 
 const only = computed(() =>
   props.only.length === 0 ? [] : [...props.only, 'jetstream'],
 );
 
-const previousUrl = computed(() => props.meta.links.shift().url);
-const nextUrl = computed(() => props.meta.links.pop().url);
+const previousUrl = computed(() => props.meta.links.shift()?.url);
+const nextUrl = computed(() => props.meta.links.pop()?.url);
 </script>
 
 <template>
@@ -62,7 +64,7 @@ const nextUrl = computed(() => props.meta.links.pop().url);
       </div>
       <div>
         <nav
-          class="isolate inline-flex -space-x-px rounded-md shadow-sm bg-white"
+          class="isolate inline-flex -space-x-px rounded-md bg-white shadow-sm"
           aria-label="Pagination"
         >
           <Link
@@ -78,7 +80,7 @@ const nextUrl = computed(() => props.meta.links.pop().url);
             :only="only"
             :href="link.url ?? ''"
             v-html="link.label"
-            class="relative inline-flex items-center first-of-type:rounded-l-md last-of-type:rounded-r-md px-3 py-2"
+            class="relative inline-flex items-center px-3 py-2 first-of-type:rounded-l-md last-of-type:rounded-r-md"
             :class="{
               'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600':
                 link.active,

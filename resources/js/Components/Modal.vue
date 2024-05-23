@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
-const props = defineProps({
-  show: {
-    type: Boolean,
-    default: false,
-  },
-  maxWidth: {
-    type: String,
-    default: '2xl',
-  },
-  closeable: {
-    type: Boolean,
-    default: true,
-  },
+type Props = {
+  show?: boolean;
+  maxWidth?: string;
+  closeable?: boolean;
+};
+
+const props = withDefaults(defineProps<Props>(), {
+  show: false,
+  maxWidth: '2xl',
+  closeable: true,
 });
 
 const emit = defineEmits(['close']);
@@ -28,7 +25,7 @@ watch(
       showSlot.value = true;
       dialog.value?.showModal();
     } else {
-      document.body.style.overflow = null;
+      document.body.style.overflow = 'none';
       setTimeout(() => {
         dialog.value?.close();
         showSlot.value = false;
@@ -43,7 +40,7 @@ const close = () => {
   }
 };
 
-const closeOnEscape = (e) => {
+const closeOnEscape = (e: KeyboardEvent) => {
   if (e.key === 'Escape' && props.show) {
     close();
   }
@@ -53,7 +50,7 @@ onMounted(() => document.addEventListener('keydown', closeOnEscape));
 
 onUnmounted(() => {
   document.removeEventListener('keydown', closeOnEscape);
-  document.body.style.overflow = null;
+  document.body.style.overflow = 'none';
 });
 
 const maxWidthClass = computed(() => {
@@ -73,7 +70,7 @@ const maxWidthClass = computed(() => {
     ref="dialog"
   >
     <div
-      class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
+      class="fixed inset-0 z-50 overflow-y-auto px-4 py-6 sm:px-0"
       scroll-region
     >
       <transition
@@ -103,7 +100,7 @@ const maxWidthClass = computed(() => {
       >
         <div
           v-show="show"
-          class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:mx-auto"
+          class="mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full"
           :class="maxWidthClass"
         >
           <slot v-if="showSlot" />

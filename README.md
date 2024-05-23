@@ -26,3 +26,7 @@ Places/people I got assistance from so far:
 Things need finishing
 
 Things need refactoring
+
+### UPDATE
+
+Everything that can be TS is now TS

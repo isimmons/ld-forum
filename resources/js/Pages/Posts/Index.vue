@@ -7,11 +7,11 @@ import Pagination from '@/Components/Pagination.vue';
 import { relativeDate } from '@/utils/date.js';
 import PageHeading from '@/Components/PageHeading.vue';
 import Pill from '@/Components/Pill.vue';
-import type { Post, PostMeta, PostTopic } from '@/@types';
+import type { PaginationMeta, Post, Topic } from '@/@types';
 
 type Props = {
-  posts: { data: Array<Post>; meta: PostMeta };
-  topics: Array<PostTopic>;
+  posts: { data: Array<Post>; meta: PaginationMeta };
+  topics: Array<Topic>;
   selectedTopic?: {
     id: number;
     name: string;

@@ -1,12 +1,7 @@
 <script setup lang="ts">
 const model = defineModel<boolean>('checked');
 
-defineProps({
-  value: {
-    type: String,
-    default: null,
-  },
-});
+defineProps<{ value?: string }>();
 </script>
 
 <template>

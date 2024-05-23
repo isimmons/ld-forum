@@ -1,7 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import { relativeDate } from '@/utils/date.js';
+import { Comment, CommentWithUser } from '@/@types';
 
-const props = defineProps(['comment', 'isEditing']);
+type Props = {
+  comment: CommentWithUser<Comment>;
+  isEditing: boolean;
+};
+
+defineProps<Props>();
 
 const emit = defineEmits(['delete', 'edit']);
 </script>
@@ -16,16 +22,16 @@ const emit = defineEmits(['delete', 'edit']);
       />
     </div>
     <div class="flex-1">
-      <div class="mt-1 prose prose-sm max-w-none" v-html="comment.html"></div>
+      <div class="prose prose-sm mt-1 max-w-none" v-html="comment.html"></div>
 
       <span class="block pt-1 text-xs text-slate-600">
         Written by
         <span
-          class="first-letter:uppercase font-semibold text-slate-600 text-sm"
+          class="text-sm font-semibold text-slate-600 first-letter:uppercase"
         >
           {{ comment.user.name }}
         </span>
-        {{ relativeDate(comment.created_at) }}
+        {{ relativeDate(comment.created_at as string) }}
       </span>
       <!-- actions -->
       <div class="mt-2 flex justify-end gap-5 empty:hidden">
@@ -35,7 +41,7 @@ const emit = defineEmits(['delete', 'edit']);
         >
           <button
             type="submit"
-            class="font-mono text-emerald-600 text-sm hover:font-semibold"
+            class="font-mono text-sm text-emerald-600 hover:font-semibold"
           >
             Edit
           </button>
@@ -46,7 +52,7 @@ const emit = defineEmits(['delete', 'edit']);
         >
           <button
             type="submit"
-            class="font-mono text-red-700 text-sm hover:font-semibold"
+            class="font-mono text-sm text-red-700 hover:font-semibold"
           >
             Delete
           </button>

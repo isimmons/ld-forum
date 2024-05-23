@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
@@ -8,13 +8,16 @@ import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { TwoFASession } from '@/@types';
 
-defineProps({
-  sessions: Array,
-});
+type Props = {
+  sessions: Array<TwoFASession>;
+};
 
-const confirmingLogout = ref(false);
-const passwordInput = ref(null);
+defineProps<Props>();
+
+const confirmingLogout = ref<boolean>(false);
+const passwordInput = ref<HTMLInputElement | null>(null);
 
 const form = useForm({
   password: '',
@@ -23,14 +26,14 @@ const form = useForm({
 const confirmLogout = () => {
   confirmingLogout.value = true;
 
-  setTimeout(() => passwordInput.value.focus(), 250);
+  setTimeout(() => passwordInput.value?.focus(), 250);
 };
 
 const logoutOtherBrowserSessions = () => {
   form.delete(route('other-browser-sessions.destroy'), {
     preserveScroll: true,
     onSuccess: () => closeModal(),
-    onError: () => passwordInput.value.focus(),
+    onError: () => passwordInput.value?.focus(),
     onFinish: () => form.reset(),
   });
 };
@@ -68,7 +71,7 @@ const closeModal = () => {
           <div>
             <svg
               v-if="session.agent.is_desktop"
-              class="w-8 h-8 text-gray-500"
+              class="h-8 w-8 text-gray-500"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -84,7 +87,7 @@ const closeModal = () => {
 
             <svg
               v-else
-              class="w-8 h-8 text-gray-500"
+              class="h-8 w-8 text-gray-500"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -111,7 +114,7 @@ const closeModal = () => {
 
                 <span
                   v-if="session.is_current_device"
-                  class="text-green-500 font-semibold"
+                  class="font-semibold text-green-500"
                   >This device</span
                 >
                 <span v-else>Last active {{ session.last_active }}</span>
@@ -121,7 +124,7 @@ const closeModal = () => {
         </div>
       </div>
 
-      <div class="flex items-center mt-5">
+      <div class="mt-5 flex items-center">
         <PrimaryButton @click="confirmLogout">
           Log Out Other Browser Sessions
         </PrimaryButton>

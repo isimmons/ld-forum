@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Container from '@/Components/Container.vue';
 import Pagination from '@/Components/Pagination.vue';
@@ -14,11 +14,24 @@ import { useConfirm } from '@/Composables/useConfirm.js';
 import MarkdownEditor from '@/Components/MarkdownEditor.vue';
 import PageHeading from '@/Components/PageHeading.vue';
 import Pill from '@/Components/Pill.vue';
+import { route } from 'ziggy-js';
+import {
+  Comment as CommentType,
+  CommentWithUser,
+  PaginationMeta,
+  Post,
+} from '@/@types';
 
-const props = defineProps(['post', 'comments']);
+type Props = {
+  post: Post;
+  comments: { data: Array<CommentWithUser<CommentType>>; meta: PaginationMeta };
+};
+
+const props = defineProps<Props>();
 
 onMounted(() => {
-  const page = new URLSearchParams(window.location.search).get('page');
+  const page = Number(new URLSearchParams(window.location.search).get('page'));
+
   if (page > 1 && props.comments.meta.links.length < 2)
     router.replace(props.post.routes.show);
 });
@@ -27,10 +40,9 @@ const commentForm = useForm({ body: '' });
 
 const { confirmation } = useConfirm();
 
-const commentTextAreaRef = ref(null);
-const commentTextAreaShouldBeFocused = ref(false);
+const commentTextAreaRef = ref<HTMLTextAreaElement | null>(null);
 
-const commentIdBeingEdited = ref(null);
+const commentIdBeingEdited = ref<number>(0);
 const isEditing = ref(false);
 const commentBeingEdited = computed(() =>
   props.comments.data.find(
@@ -47,19 +59,19 @@ const addComment = () => {
   });
 };
 
-const scrollToComment = (id) => {
-  document.getElementById(id).scrollIntoView();
+const scrollToComment = (id: string) => {
+  document.getElementById(id)?.scrollIntoView();
 };
 
-const editComment = (commentId) => {
+const editComment = (commentId: number) => {
   isEditing.value = true;
   commentIdBeingEdited.value = commentId;
-  commentForm.body = commentBeingEdited.value?.body;
+  commentForm.body = commentBeingEdited.value?.body ?? '';
   commentTextAreaRef.value?.focus();
 };
 
 const cancelEditComment = () => {
-  commentIdBeingEdited.value = null;
+  commentIdBeingEdited.value = 0;
   commentForm.reset();
   isEditing.value = false;
 };
@@ -68,7 +80,7 @@ const updateComment = async () => {
   if (commentForm.processing) return;
 
   if (!(await confirmation('Are you sure you want to update your comment?'))) {
-    setTimeout(() => commentTextAreaRef.value.focus(), 300);
+    setTimeout(() => commentTextAreaRef.value?.focus(), 300);
     return;
   }
 
@@ -81,14 +93,14 @@ const updateComment = async () => {
     {
       preserveScroll: true,
       onSuccess: () => {
-        scrollToComment(commentIdBeingEdited.value);
+        scrollToComment(commentIdBeingEdited.value.toString());
         cancelEditComment();
       },
     },
   );
 };
 
-const deleteComment = async (commentId) => {
+const deleteComment = async (commentId: number) => {
   if (!(await confirmation('Are you sure you want to delete this comment?')))
     return;
 
@@ -117,13 +129,13 @@ const deleteComment = async (commentId) => {
         >{{ post.topic.name }}
       </Pill>
       <PageHeading class="mt-2">{{ post.title }}</PageHeading>
-      <span class="block mt-1 text-sm text-slate-600"
+      <span class="mt-1 block text-sm text-slate-600"
         >Written by<span class="font-semibold text-slate-800">{{
           ` ${post.user.name} `
         }}</span
         >{{ relativeDate(post.created_at) }}</span
       >
-      <article class="mt-6 prose prose-sm max-w-none" v-html="post.html" />
+      <article class="prose prose-sm mt-6 max-w-none" v-html="post.html" />
 
       <div class="mt-12">
         <h2 class="text-xl font-semibold">Comments</h2>
@@ -164,9 +176,9 @@ const deleteComment = async (commentId) => {
           </div>
         </form>
 
-        <ul class="divide-y divide-slate-300 mt-4">
+        <ul class="mt-4 divide-y divide-slate-300">
           <li
-            :id="comment.id"
+            :id="comment.id?.toString()"
             v-for="comment in comments.data"
             :key="comment.id"
             class="px-2 py-4"

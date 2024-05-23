@@ -6,6 +6,8 @@
         "target": "esnext",
         "jsx": "preserve",
         "strict": true,
+        "noImplicitAny": true,
+        "noUncheckedIndexedAccess": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,

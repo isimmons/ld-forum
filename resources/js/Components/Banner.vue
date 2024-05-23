@@ -1,16 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { onUnmounted, ref, watchEffect } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { InertiaSharedProps } from '@/@types';
 
-const page = usePage();
-const show = ref(true);
-const style = ref('success');
-const message = ref('');
-const timeout = ref(null);
+const page = usePage<InertiaSharedProps>();
+const show = ref<boolean>(true);
+const style = ref<'success' | 'danger'>('success');
+const message = ref<string>('');
+const timeout = ref<number>(0);
 
 watchEffect(async () => {
-  style.value = page.props.jetstream.flash?.bannerStyle || 'success';
-  message.value = page.props.jetstream.flash?.banner || '';
+  style.value = page.props.jetstream.flash.bannerStyle || 'success';
+  message.value = page.props.jetstream.flash.banner || '';
 
   show.value = true;
 
@@ -18,7 +19,7 @@ watchEffect(async () => {
 
   timeout.value = setTimeout(
     () => (show.value = false),
-    page.props.jetstream.flash?.delay || 2000,
+    page.props.jetstream.flash.delay || 2000,
   );
 });
 
@@ -34,11 +35,11 @@ onUnmounted(() => clearTimeout(timeout.value));
         'bg-red-700': style == 'danger',
       }"
     >
-      <div class="max-w-screen-xl mx-auto py-2 px-3 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between flex-wrap">
-          <div class="w-0 flex-1 flex items-center min-w-0">
+      <div class="mx-auto max-w-screen-xl px-3 py-2 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap items-center justify-between">
+          <div class="flex w-0 min-w-0 flex-1 items-center">
             <span
-              class="flex p-2 rounded-lg"
+              class="flex rounded-lg p-2"
               :class="{
                 'bg-indigo-600': style == 'success',
                 'bg-red-600': style == 'danger',
@@ -77,7 +78,7 @@ onUnmounted(() => clearTimeout(timeout.value));
               </svg>
             </span>
 
-            <p class="ms-3 font-medium text-sm text-white truncate">
+            <p class="ms-3 truncate text-sm font-medium text-white">
               {{ message }}
             </p>
           </div>
@@ -85,7 +86,7 @@ onUnmounted(() => clearTimeout(timeout.value));
           <div class="shrink-0 sm:ms-3">
             <button
               type="button"
-              class="-me-1 flex p-2 rounded-md focus:outline-none sm:-me-2 transition"
+              class="-me-1 flex rounded-md p-2 transition focus:outline-none sm:-me-2"
               :class="{
                 'hover:bg-indigo-600 focus:bg-indigo-600': style == 'success',
                 'hover:bg-red-600 focus:bg-red-600': style == 'danger',

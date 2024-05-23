@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: '',
 });
 
-const model = defineModel<Editor>();
+const model = defineModel<string>();
 
 const editor = useEditor({
   extensions: [

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { Link, router, useForm } from '@inertiajs/vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
@@ -8,25 +8,25 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { User } from '@/@types';
+import { route } from 'ziggy-js';
 
-const props = defineProps({
-  user: Object,
-});
+const props = defineProps<{ user: User }>();
 
 const form = useForm({
   _method: 'PUT',
   name: props.user.name,
   email: props.user.email,
-  photo: null,
+  photo: new File([], 'profilePhoto'),
 });
 
-const verificationLinkSent = ref(null);
-const photoPreview = ref(null);
-const photoInput = ref(null);
+const verificationLinkSent = ref<boolean>(false);
+const photoPreview = ref<string | null>(null);
+const photoInput = ref<HTMLInputElement | null>(null);
 
 const updateProfileInformation = () => {
-  if (photoInput.value) {
-    form.photo = photoInput.value.files[0];
+  if (photoInput.value && photoInput.value.files !== null) {
+    form.photo = photoInput.value.files[0] as File;
   }
 
   form.post(route('user-profile-information.update'), {
@@ -41,10 +41,11 @@ const sendEmailVerification = () => {
 };
 
 const selectNewPhoto = () => {
-  photoInput.value.click();
+  photoInput.value?.click();
 };
 
 const updatePhotoPreview = () => {
+  if (photoInput.value === null || photoInput.value.files === null) return;
   const photo = photoInput.value.files[0];
 
   if (!photo) return;
@@ -52,7 +53,7 @@ const updatePhotoPreview = () => {
   const reader = new FileReader();
 
   reader.onload = (e) => {
-    photoPreview.value = e.target.result;
+    photoPreview.value = e.target?.result as string;
   };
 
   reader.readAsDataURL(photo);
@@ -69,15 +70,15 @@ const deletePhoto = () => {
 };
 
 const clearPhotoFileInput = () => {
-  if (photoInput.value?.value) {
-    photoInput.value.value = null;
+  if (photoInput.value) {
+    photoInput.value = null;
   }
 };
 </script>
 
 <template>
   <FormSection @submitted="updateProfileInformation">
-    <template #title> Profile Information </template>
+    <template #title> Profile Information</template>
 
     <template #description>
       Update your account's profile information and email address.

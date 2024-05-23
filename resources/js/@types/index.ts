@@ -4,16 +4,10 @@ export type PaginationLink = {
   active: boolean;
 };
 
-export type PostTopic = {
+export type Topic = {
   id: number;
   name: string;
   slug: string;
-};
-
-export type User = {
-  id: number;
-  name: string;
-  email: string;
 };
 
 export type Team = {
@@ -21,15 +15,16 @@ export type Team = {
   name: string;
 };
 
-export type InertiaAuthUser = {
+export type User = {
   id: number;
   name: string;
+  username: string;
   email: string;
   profile_photo_path: string;
   profile_photo_url: string;
   two_factor_enabled: boolean;
   two_factor_confirmed_at: Date | null;
-  email_verified_at: Date;
+  email_verified_at: Date | null;
   created_at: Date;
   updated_at: Date;
   current_team_id: number | null;
@@ -38,13 +33,23 @@ export type InertiaAuthUser = {
 };
 
 export type InertiaSharedProps = {
-  auth: { user: InertiaAuthUser };
+  auth: { user: User };
   permissions: { create_posts: boolean };
   jetstream: {
     hasApiFeatures: boolean;
-    managesProfilePhotos: boolean;
     hasTeamFeatures: boolean;
+    hasAccountDeletionFeatures: boolean;
+    hasEmailVerification: boolean;
+    managesProfilePhotos: boolean;
     canCreateTeams: boolean;
+    canUpdateProfileInformation: boolean;
+    canManageTwoFactorAuthentication: boolean;
+    canUpdatePassword: boolean;
+    flash: {
+      bannerStyle?: 'success' | 'danger';
+      banner?: string;
+      delay?: number;
+    };
   };
 };
 
@@ -52,16 +57,44 @@ export type Post = {
   id: number;
   title: string;
   body: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   routes: { show: string };
-  topic: PostTopic;
+  topic: Topic;
   user: User;
+  html: string;
 };
 
-export type PostMeta = {
+export type PaginationMeta = {
   links: Array<PaginationLink>;
   from: number;
   to: number;
   total: number;
+  current_page: number;
+};
+
+export type Comment = {
+  id: number;
+  title: string;
+  body: string;
+  html: string;
+  created_at: string;
+  updated_at: string;
+  can?: {
+    update: boolean;
+    delete: boolean;
+  };
+};
+
+export type CommentWithUser<T> = Partial<T> & { user: User };
+
+export type TwoFASession = {
+  agent: {
+    is_desktop: boolean;
+    platform: string;
+    browser: string;
+  };
+  ip_address: string;
+  is_current_device: boolean;
+  last_active: Date;
 };

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import ActionSection from '@/Components/ActionSection.vue';
@@ -9,18 +9,18 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { InertiaSharedProps } from '@/@types';
+import axios from 'axios';
 
-const props = defineProps({
-  requiresConfirmation: Boolean,
-});
+const props = defineProps<{ requiresConfirmation: boolean }>();
 
-const page = usePage();
-const enabling = ref(false);
-const confirming = ref(false);
-const disabling = ref(false);
-const qrCode = ref(null);
-const setupKey = ref(null);
-const recoveryCodes = ref([]);
+const page = usePage<InertiaSharedProps>();
+const enabling = ref<boolean>(false);
+const confirming = ref<boolean>(false);
+const disabling = ref<boolean>(false);
+const qrCode = ref<string | null>(null);
+const setupKey = ref<string | null>(null);
+const recoveryCodes = ref<Array<string>>([]);
 
 const confirmationForm = useForm({
   code: '',
@@ -55,22 +55,19 @@ const enableTwoFactorAuthentication = () => {
   );
 };
 
-const showQrCode = () => {
-  return axios.get(route('two-factor.qr-code')).then((response) => {
-    qrCode.value = response.data.svg;
-  });
+const showQrCode = async () => {
+  const response = await axios.get(route('two-factor.qr-code'));
+  qrCode.value = response.data.svg;
 };
 
-const showSetupKey = () => {
-  return axios.get(route('two-factor.secret-key')).then((response) => {
-    setupKey.value = response.data.secretKey;
-  });
+const showSetupKey = async () => {
+  const response = await axios.get(route('two-factor.secret-key'));
+  setupKey.value = response.data.secretKey;
 };
 
-const showRecoveryCodes = () => {
-  return axios.get(route('two-factor.recovery-codes')).then((response) => {
-    recoveryCodes.value = response.data;
-  });
+const showRecoveryCodes = async () => {
+  const response = await axios.get(route('two-factor.recovery-codes'));
+  recoveryCodes.value = response.data;
 };
 
 const confirmTwoFactorAuthentication = () => {
@@ -156,7 +153,7 @@ const disableTwoFactorAuthentication = () => {
             </p>
           </div>
 
-          <div class="mt-4 p-2 inline-block bg-white" v-html="qrCode" />
+          <div class="mt-4 inline-block bg-white p-2" v-html="qrCode" />
 
           <div v-if="setupKey" class="mt-4 max-w-xl text-sm text-gray-600">
             <p class="font-semibold">
@@ -172,7 +169,7 @@ const disableTwoFactorAuthentication = () => {
               v-model="confirmationForm.code"
               type="text"
               name="code"
-              class="block mt-1 w-1/2"
+              class="mt-1 block w-1/2"
               inputmode="numeric"
               autofocus
               autocomplete="one-time-code"
@@ -193,7 +190,7 @@ const disableTwoFactorAuthentication = () => {
           </div>
 
           <div
-            class="grid gap-1 max-w-xl mt-4 px-4 py-4 font-mono text-sm bg-gray-100 rounded-lg"
+            class="mt-4 grid max-w-xl gap-1 rounded-lg bg-gray-100 px-4 py-4 font-mono text-sm"
           >
             <div v-for="code in recoveryCodes" :key="code">
               {{ code }}

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Container from '@/Components/Container.vue';
 import { useForm } from '@inertiajs/vue3';
@@ -9,14 +9,17 @@ import InputError from '@/Components/InputError.vue';
 import MarkdownEditor from '@/Components/MarkdownEditor.vue';
 import { isProductionEnv } from '@/utils/environment.js';
 import PageHeading from '@/Components/PageHeading.vue';
+import { Topic } from '@/@types';
+import axios from 'axios';
 
-const props = defineProps(['topics']);
+const props = defineProps<{ topics: Array<Topic> }>();
 
 const postForm = useForm({
   title: '',
-  topic_id: props.topics[0].id,
+  topic_id: props.topics[0]?.id,
   body: '',
 });
+
 const createPost = () => postForm.post(route('posts.store'));
 
 const autofill = async () => {
@@ -50,7 +53,7 @@ const autofill = async () => {
               v-model="postForm.topic_id"
               name="topic_id"
               id="topic_id"
-              class="mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             >
               <option v-for="topic in topics" :key="topic.id" :value="topic.id">
                 {{ topic.name }}

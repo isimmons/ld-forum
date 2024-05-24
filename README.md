@@ -43,4 +43,4 @@ Things still need some refactoring but all is working.
 This first iteration of the conversion has been a practice in making red squigglies go away so the code would compile.
 
 A big part of refactoring will be revisiting every place where I put a ? and actually handling the null/undefined
-possibility so I can remove the ? Every case is different and needs to be examined further. 
+possibility so I can remove the ? Every case is different and needs to be examined further.

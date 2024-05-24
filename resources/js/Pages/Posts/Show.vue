@@ -43,7 +43,9 @@ const { confirmation } = useConfirm();
 const commentTextAreaRef = ref<HTMLTextAreaElement | null>(null);
 
 const commentIdBeingEdited = ref<number>(0);
+
 const isEditing = ref(false);
+
 const commentBeingEdited = computed(() =>
   props.comments.data.find(
     (comment) => comment.id === commentIdBeingEdited.value,

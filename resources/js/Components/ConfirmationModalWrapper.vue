@@ -3,12 +3,12 @@ import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useConfirm } from '@/Composables/useConfirm.js';
-import { nextTick, ref, watchEffect, Component } from 'vue';
+import { nextTick, ref, watchEffect } from 'vue';
 
 const { state, confirm, cancel } = useConfirm();
 const cancelButtonRef = ref<HTMLButtonElement | null>(null);
 
-watchEffect(async () => {
+watchEffect(async function () {
   if (state.show) {
     await nextTick();
     // @ts-ignore  $el does exist but Vue/TS together = be dumb sometimes

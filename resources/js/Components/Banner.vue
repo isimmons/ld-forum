@@ -7,7 +7,7 @@ const page = usePage<InertiaSharedProps>();
 const show = ref<boolean>(true);
 const style = ref<'success' | 'danger'>('success');
 const message = ref<string>('');
-const timeout = ref<number>(0);
+const timeout = ref<undefined|number|ReturnType<typeof setTimeout>>();
 
 watchEffect(async () => {
   style.value = page.props.jetstream.flash.bannerStyle || 'success';

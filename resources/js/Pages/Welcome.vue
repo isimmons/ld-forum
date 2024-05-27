@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { route } from 'ziggy-js';
+// import { route } from 'ziggy-js';
+
+
 
 type Props = {
   canLogin?: boolean;

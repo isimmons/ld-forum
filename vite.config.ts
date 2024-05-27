@@ -1,7 +1,10 @@
-import { defineConfig } from 'vite';
+/// <reference types="vitest" />
+
+import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
+
 export default defineConfig({
   resolve: {
     alias: {
@@ -22,4 +25,9 @@ export default defineConfig({
       },
     }),
   ],
+  test: {
+    include: ['resources/js/tests/**/*.{ts,js}'],
+    setupFiles: ['resources/js/vitestSetupFile.ts'],
+    globals: true,
+  }
 });

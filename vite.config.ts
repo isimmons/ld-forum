@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 
-import {defineConfig} from 'vite';
+import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
@@ -27,7 +27,8 @@ export default defineConfig({
   ],
   test: {
     include: ['resources/js/tests/**/*.{ts,js}'],
+    environment: 'jsdom',
     setupFiles: ['resources/js/vitestSetupFile.ts'],
     globals: true,
-  }
+  },
 });

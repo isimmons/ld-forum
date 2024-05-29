@@ -50,3 +50,36 @@ possibility so I can remove the ? Every case is different and needs to be examin
 Going to work on testing dom and accessibility with testing-library and vitest.
 Branch wip-testing
 Also practicing branch, ci, merging, backups, related topics with this.
+
+https://github.com/inertiajs/inertia/discussions/513
+
+try this later
+
+```js
+import { config, shallowMount } from '@vue/test-utils';
+import ExampleComponent from '@/Components/ExampleComponent';
+
+config.global.mocks = { $t: () => '' };
+
+jest.mock('@inertiajs/inertia-vue3', () => ({
+  __esModule: true,
+  ...jest.requireActual('@inertiajs/inertia-vue3'), // Keep the rest of Inertia untouched!
+  useForm: () => ({ /** Return what you need **/ /** Don't forget to mock post, put, ... methods **/ }),
+  usePage: () => ({
+    props: {
+      value: {
+        someSharedData: 'something',
+      },
+    },
+  }),
+}));
+
+test('Render ExampleComponent without crashing', () => {
+  const wrapper = shallowMount(ExampleComponent, {
+    props: {
+      otherPageProps: {},
+    },
+  });
+  expect(wrapper.text()).toContain('Hi! I am ExampleComponent.');
+});
+```

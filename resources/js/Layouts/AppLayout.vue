@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { route } from 'ziggy-js';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
@@ -30,7 +29,7 @@ const switchToTeam = (team: Team) => {
 const logout = () => {
   router.post(route('logout'));
 };
-
+console.log('I got here...');
 const menu = [
   {
     name: 'Dashboard',

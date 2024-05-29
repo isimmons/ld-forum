@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import { it, expect } from 'vitest';
 import { screen, render } from '@testing-library/vue';
 import Welcome from '@/Pages/Welcome.vue';
@@ -24,7 +23,7 @@ it('Shows login/register links if the user is not authenticated', async () => {
     },
   });
 
-  expect(screen.getByRole('link', { name: /log/i })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /log in/i })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /register/i })).toBeInTheDocument();
 });
 

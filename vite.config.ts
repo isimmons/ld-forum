@@ -26,9 +26,10 @@ export default defineConfig({
     }),
   ],
   test: {
-    include: ['resources/js/tests/**/*.{ts,js}'],
+    include: ['resources/js/tests/{Pages,Components,Layouts}/*.{ts,js}'],
     environment: 'jsdom',
-    setupFiles: ['resources/js/vitestSetupFile.ts'],
+    setupFiles: ['resources/js/tests/setup.ts'],
     globals: true,
+    reporters: ['verbose'],
   },
 });
